@@ -19,15 +19,15 @@ function writeIndexTSFile(filePath: string, name: string) {
   }
   fs.writeFileSync(
     filePath,
-    `
-  import {ColumnSchemaString} from '@columnapp/schema'
-  
+    `import { ColumnSchemaString } from '@columnapp/schema'
+
   const column: ColumnSchemaString = {
-      name: "${name}",
-      version: 'string.0.0.1',
-      info: 'example string column',
+    name: 'Shooting Stars',
+    version: 'string.0.0.1',
+    info: 'example string column',
   }
-  export default column`,
+
+  export default { column }`,
   )
 }
 function writeTSConfigFile(filePath: string) {
@@ -36,29 +36,28 @@ function writeTSConfigFile(filePath: string) {
   }
   fs.writeFileSync(
     filePath,
-    `
-{
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "exclude": ["node_modules", "dist"],
-    "display": "Default",
-    "compilerOptions": {
-        "baseUrl": "./",
-        "composite": false,
-        "stripInternal": true,
-        "lib": ["es2020"],
-        "disableSizeLimit": true,
-        "incremental": true,
-        "outDir": "dist",
-        "declaration": true,
-        "declarationMap": true,
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
-        "inlineSources": false,
-        "isolatedModules": true,
-        "moduleResolution": "node",
-        "skipLibCheck": true,
-        "strict": true
-    }
+    `{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "exclude": ["node_modules", "dist"],
+  "display": "Default",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "composite": false,
+    "stripInternal": true,
+    "lib": ["es2020"],
+    "disableSizeLimit": true,
+    "incremental": true,
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSources": false,
+    "isolatedModules": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "strict": true
+  }
 }`,
   )
 }
