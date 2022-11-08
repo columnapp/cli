@@ -1,41 +1,41 @@
 #! /usr/bin/env node
 import { Command } from 'commander'
 import colors from 'colors'
-
+import path from 'path'
 import { prompt } from 'enquirer'
 import fs from 'fs'
 import { execSync } from 'child_process'
 
 const PACKAGE_MANAGERS = {
-  npm: 'npm install --dev @columnapp/schema typescript',
-  yarn: 'yarn add --dev @columnapp/schema typescript',
-  pnpm: 'pnpm add -D @columnapp/schema typescript',
+  npm: (prefix: string) => `npm install --prefix ${prefix} -D @columnapp/schema typescript`,
+  yarn: (prefix: string) => `cd ${prefix} && yarn add --dev @columnapp/schema typescript`, // not sure why cwd wouldnt work
 } as const
 /**
  * generated the index.ts file
  */
-function writeIndexTSFile() {
-  if (fs.existsSync('./index.ts')) {
-    fs.rmSync('./index.ts')
+function writeIndexTSFile(filePath: string, name: string) {
+  if (fs.existsSync(filePath)) {
+    fs.rmSync(filePath)
   }
   fs.writeFileSync(
-    './index.ts',
+    filePath,
     `
   import {ColumnSchemaString} from '@columnapp/schema'
   
   const column: ColumnSchemaString = {
+      name: "${name}",
       version: 'string.0.0.1',
       info: 'example string column',
   }
   export default column`,
   )
 }
-function writeTSConfigFile() {
-  if (fs.existsSync('./tsconfig.json')) {
-    fs.rmSync('./tsconfig.json')
+function writeTSConfigFile(filePath: string) {
+  if (fs.existsSync(filePath)) {
+    fs.rmSync(filePath)
   }
   fs.writeFileSync(
-    './tsconfig.json',
+    filePath,
     `
 {
     "$schema": "https://json.schemastore.org/tsconfig",
@@ -62,73 +62,79 @@ function writeTSConfigFile() {
 }`,
   )
 }
+
+type Options = {
+  path?: string
+}
 const program = new Command()
-program.version('0.1.0').action(async () => {
-  console.log(colors.cyan('Welcome, we are going to bootstrap a barebone column for column.app.'))
-  try {
-    const responseName: { name: string } = (await prompt({
-      type: 'input',
-      name: 'name',
-      message: 'column name:',
-      required: true,
-    })) as { name: string }
+program
+  .version('0.1.0')
+  .option('-p, --path <path>', 'directory path to create the column')
+  .action(async (options: Options) => {
+    function optionPath(p: string) {
+      return options.path == null ? p : path.join(options.path, p)
+    }
+    console.log(
+      colors.cyan(
+        `Welcome, we are going to bootstrap a barebone column for column.app in ${
+          options.path == null ? 'the current directory' : options.path
+        }`,
+      ),
+    )
+    // ensure opts.path exist
+    if (options.path != null && !fs.existsSync(options.path)) {
+      fs.mkdirSync(options.path)
+    }
+    const tsConfigPath = optionPath('tsconfig.json')
+    const indexTsPath = optionPath('index.ts')
+    try {
+      const responseName: { name: string } = (await prompt({
+        type: 'input',
+        name: 'name',
+        message: 'column name:',
+        required: true,
+      })) as { name: string }
 
-    const responsePackage = (await prompt({
-      type: 'select',
-      name: 'packageManager',
-      message: 'package manager:',
-      required: true,
-      initial: 0,
-      choices: Object.keys(PACKAGE_MANAGERS).map((p) => ({ name: p, message: p, value: p })),
-    })) as { packageManager: keyof typeof PACKAGE_MANAGERS }
-    let writeIndex = true
-    if (fs.existsSync('./index.ts')) {
-      const response = (await prompt({
-        type: 'confirm',
-        name: 'writeIndex',
-        message: 'index.ts already exists, overwrite?:',
-      })) as { writeIndex: boolean }
-      writeIndex = response.writeIndex
+      const responsePackage = (await prompt({
+        type: 'select',
+        name: 'packageManager',
+        message: 'package manager:',
+        required: true,
+        initial: 0,
+        choices: Object.keys(PACKAGE_MANAGERS).map((p) => ({ name: p, message: p, value: p })),
+      })) as { packageManager: keyof typeof PACKAGE_MANAGERS }
+      let writeIndex = true
+      if (fs.existsSync(indexTsPath)) {
+        const response = (await prompt({
+          type: 'confirm',
+          name: 'writeIndex',
+          message: 'index.ts already exists, overwrite?:',
+        })) as { writeIndex: boolean }
+        writeIndex = response.writeIndex
+      }
+      let writeTsconfig = true
+      if (fs.existsSync(tsConfigPath)) {
+        const response = (await prompt({
+          type: 'confirm',
+          name: 'writeTsconfig',
+          message: 'tsconfig.json already exists, overwrite?:',
+        })) as { writeTsconfig: boolean }
+        writeTsconfig = response.writeTsconfig
+      }
+      if (writeIndex) {
+        writeIndexTSFile(indexTsPath, responseName.name)
+        console.log(colors.green(`index.ts is created`))
+      }
+      if (writeTsconfig) {
+        writeTSConfigFile(tsConfigPath)
+        console.log(colors.green(`tsconfig.json is created`))
+      }
+      console.log(colors.cyan('Installing the necessary packages...'))
+      execSync(PACKAGE_MANAGERS[responsePackage.packageManager](options.path ?? '.'))
+      console.log(colors.green('Done! Open index.ts to start building your column, happy coding :)'))
+    } catch (e) {
+      console.log(colors.green('Cancelled'))
     }
-    let writeTsconfig = true
-    if (fs.existsSync('./tsconfig.json')) {
-      const response = (await prompt({
-        type: 'confirm',
-        name: 'writeTsconfig',
-        message: 'tsconfig.json already exists, overwrite?:',
-      })) as { writeTsconfig: boolean }
-      writeTsconfig = response.writeTsconfig
-    }
-    if (writeIndex) {
-      writeIndexTSFile()
-      console.log(colors.green(`index.ts is created`))
-    }
-    if (writeTsconfig) {
-      writeTSConfigFile()
-      console.log(colors.green(`tsconfig.json is created`))
-    }
-    execSync(`${PACKAGE_MANAGERS[responsePackage.packageManager]}`)
-  } catch (e) {
-    console.log(colors.green('Cancelled'))
-  }
-})
+  })
 
-// // generate the package.json with @columnapp/schema
-// if (fs.existsSync('./package.json')) {
-//   console.warn('skip generating package.json')
-// } else {
-//   fs.writeFileSync(
-//     './package.json',
-//     `
-// {
-//     "name": "COLUMN_NAME",
-//     "description": "COLUMN_DESCRIPTION",
-//     "version": "1.0.0"
-//     "devDependencies": {
-
-//     }
-// }
-// `,
-//   )
-// }
 program.parse()
