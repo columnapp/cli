@@ -1,17 +1,18 @@
 {
-  "name": "@columnapp/create-column",
+  "name": "@columnapp/cli",
   "version": "1.0.3",
-  "repository": "https://github.com/columnapp/create-column",
+  "repository": "https://github.com/columnapp/cli",
   "scripts": {
-    "test-run": "ts-node index.ts",
+    "test-init": "ts-node init.ts",
     "clean": "rimraf ./dist/",
     "build": "yarn run clean && tsc",
     "prepare": "yarn run build",
-    "deploy-local": "yarn run prepare && npm uninstall -g && npm install -g"
+    "deploy-local": "yarn run prepare && npm uninstall -g && npm install -g --force"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "bin": "./dist/index.js",
+  "bin": {
+    "init": "./dist/init.js",
+    "publish": "./dist/publish.js"
+  },
   "author": {
     "email": "hello@column.app",
     "name": "columnapp",
