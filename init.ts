@@ -67,7 +67,7 @@ type Options = {
 }
 const program = new Command()
 program
-  .version('0.1.0')
+  .version('0.0.1')
   .option('-p, --path <path>', 'directory path to create the column')
   .action(async (options: Options) => {
     function optionPath(p: string) {
