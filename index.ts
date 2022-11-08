@@ -21,13 +21,13 @@ function writeIndexTSFile(filePath: string, name: string) {
     filePath,
     `import { ColumnSchemaString } from '@columnapp/schema'
 
-  const column: ColumnSchemaString = {
-    name: 'Shooting Stars',
-    version: 'string.0.0.1',
-    info: 'example string column',
-  }
+const column: ColumnSchemaString = {
+  name: 'Shooting Stars',
+  version: 'string.0.0.1',
+  info: 'example string column',
+}
 
-  export default { column }`,
+export default { column }`,
   )
 }
 function writeTSConfigFile(filePath: string) {
