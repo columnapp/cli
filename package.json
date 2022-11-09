@@ -1,11 +1,11 @@
 {
   "name": "@columnapp/cli",
-  "version": "1.0.3",
+  "version": "1.0.0-alpha1",
   "repository": "https://github.com/columnapp/cli",
   "scripts": {
     "test-init": "ts-node init.ts",
     "dev-server": "npx http-server -c-1",
-    "test-publish": "ts-node publish.ts whatev",
+    "test-publish": "ts-node publish.ts whatev --path publish-test/",
     "clean": "rimraf ./dist/",
     "build": "yarn run clean && tsc",
     "prepare": "yarn run build",
@@ -25,6 +25,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@columnapp/schema": "^0.0.1-alpha4",
     "colors": "^1.4.0",
     "commander": "^9.4.1",
     "enquirer": "^2.3.6",
