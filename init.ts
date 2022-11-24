@@ -7,8 +7,8 @@ import fs from 'fs'
 import { execSync } from 'child_process'
 
 const PACKAGE_MANAGERS = {
-  npm: (prefix: string) => `npm install --prefix ${prefix} -D @columnapp/schema typescript`,
-  yarn: (prefix: string) => `cd ${prefix} && yarn add --dev @columnapp/schema typescript`, // not sure why cwd wouldnt work
+  npm: (prefix: string) => `npm install --prefix ${prefix} -D @columnapp/schema typescript @types/node`,
+  yarn: (prefix: string) => `cd ${prefix} && yarn add --dev @columnapp/schema typescript @types/node`, // not sure why cwd wouldnt work
 } as const
 /**
  * generated the index.ts file
@@ -23,7 +23,7 @@ function writeIndexTSFile(filePath: string, name: string) {
 
 const column: ColumnSchemaString = {
   name: 'Shooting Stars',
-  type: 'string.0.0.1',
+  type: 'string',
   info: 'example string column',
 }
 
