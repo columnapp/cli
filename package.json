@@ -7,15 +7,17 @@
     "dev-server": "npx http-server -c-1",
     "test-publish": "ts-node publish.ts --path publish-test/",
     "clean": "rimraf ./dist/",
+    "cli": "ts-node ./index.ts",
     "build": "yarn run clean && tsc",
-    "prepare": "yarn run build",
-    "deploy-local": "yarn run prepare && npm uninstall -g && npm install -g --force",
-    "local-publish": "yarn run deploy-local && npx publish",
-    "local-init": "yarn run deploy-local && npx init"
+    "prepare": "yarn run build"
   },
   "bin": {
-    "init": "./dist/init.js",
-    "publish": "./dist/publish.js"
+    "cli": "./dist/index.js"
+  },
+  "ts-node": {
+    "require": [
+      "tsconfig-paths/register"
+    ]
   },
   "author": {
     "email": "hello@column.app",
@@ -25,7 +27,6 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@columnapp/schema": "0.0.1-alpha13",
     "axios": "^1.2.0",
     "colors": "^1.4.0",
     "commander": "^9.4.1",
@@ -34,10 +35,12 @@
     "esbuild": "^0.15.15"
   },
   "devDependencies": {
+    "@columnapp/schema": "0.0.1-alpha14",
     "@types/node": "^18.11.9",
     "prettier": "^2.8.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.9.3"
   },
   "publishConfig": {
