@@ -23,7 +23,7 @@ function writeIndexTSFile(filePath: string, name: string) {
 
 const column: ColumnSchemaString = {
   name: 'Shooting Stars',
-  version: 'string.0.0.1',
+  type: 'string.0.0.1',
   info: 'example string column',
 }
 
