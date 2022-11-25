@@ -8,8 +8,8 @@ A column is a plain javascript object that contains how the column would behave 
 
 - :checkered_flag:. Create a directory, name it whatever you want.
 - :file_folder: Inside the newly created directory run `npx @columnapp/cli init` to bootstrap folder.
-- :pencil2: Inside you will find `column.ts`, the javascript object exported there is what will be published. Currently, we only support typescript.
-- :rocket: Once you are ready to publish, go to https://column.app/publish to get a publish key
-- :star: run `npx @columnapp/cli publish <publish key>`, using the same publish key will
+- :pencil2: Inside you will find `index.ts`, the javascript object exported there is what will be published. Currently, we only support typescript.
+- :rocket: Once you are ready to publish, go to https://column.app/settings/columns to get a publish key.
+- :star: run `npx @columnapp/cli publish <publish key>`, using the publish key you generated.
 
 If you have any questions, feel free to email us @ hello@column.app :+1:

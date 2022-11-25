@@ -1,11 +1,11 @@
 {
   "name": "@columnapp/cli",
-  "version": "1.0.0-alpha4",
+  "version": "1.0.0-alpha5",
   "repository": "https://github.com/columnapp/cli",
   "scripts": {
     "test-init": "ts-node init.ts",
     "dev-server": "npx http-server -c-1",
-    "test-publish": "ts-node publish.ts --path publish-test/",
+    "test-publish": "ts-node index.ts publish publish-key --path test-publish/ -ds",
     "clean": "rimraf ./dist/",
     "cli": "ts-node ./index.ts",
     "build": "yarn run clean && tsc",

@@ -15,15 +15,15 @@ const PACKAGE_MANAGERS = {
 /**
  * generated the index.ts file
  */
-function writeIndexTSFile(filePath: string, name: string, type: string) {
+function writeIndexTSFile(filePath: string, name: string, type: string, imports: string) {
   if (fs.existsSync(filePath)) {
     fs.rmSync(filePath)
   }
   fs.writeFileSync(
     filePath,
-    `import { ColumnSchemaString } from '@columnapp/schema'
+    `import { ${imports} } from '@columnapp/schema'
 
-const column: ColumnSchemaString = {
+const column: ${imports} = {
   name: '${name}',
   type: '${type}',
   info: 'example string column',
@@ -68,15 +68,31 @@ type Options = {
   path?: string
 }
 
-const TypeMap: { [type in typeof ColumnSchema._input.type]: type } = {
-  boolean: 'boolean',
-  'boolean[]': 'boolean[]',
-  date: 'date',
-  'date[]': 'date[]',
-  number: 'number',
-  'number[]': 'number[]',
-  string: 'string',
-  'string[]': 'string[]',
+const TypeMap: {
+  [type in typeof ColumnSchema._input.type]: {
+    imports: string
+  }
+} = {
+  boolean: {
+    imports: 'ColumnSchemaBoolean',
+  },
+  'boolean[]': {
+    imports: 'ColumnSchemaBooleans',
+  },
+  date: {
+    imports: 'ColumnSchemaDate',
+  },
+  'date[]': {
+    imports: 'ColumnSchemaDates',
+  },
+  number: {
+    imports: 'ColumnSchemaNumber',
+  },
+  'number[]': {
+    imports: 'ColumnSchemaNumbers',
+  },
+  string: { imports: 'ColumnSchemaString' },
+  'string[]': { imports: 'ColumnSchemaStrings' },
 }
 
 export async function init(program: Command) {
@@ -99,22 +115,22 @@ export async function init(program: Command) {
         fs.mkdirSync(options.path)
       }
       const tsConfigPath = optionPath('tsconfig.json')
-      const indexTsPath = optionPath('column.ts')
+      const indexTsPath = optionPath('index.ts')
       try {
-        const responseName: { value: string } = (await prompt({
+        const responseName = (await prompt({
           type: 'input',
           name: 'value',
           message: 'column name:',
           required: true,
         })) as { value: string }
 
-        const responseType: { value: string } = (await prompt({
+        const responseType = (await prompt({
           type: 'select',
           name: 'value',
           choices: Object.keys(TypeMap).map((type) => ({ name: type, value: type })),
           message: 'column type:',
           required: true,
-        })) as { value: string }
+        })) as { value: keyof typeof TypeMap }
 
         const responsePackage = (await prompt({
           type: 'select',
@@ -124,6 +140,7 @@ export async function init(program: Command) {
           initial: 0,
           choices: Object.keys(PACKAGE_MANAGERS).map((p) => ({ name: p, message: p, value: p })),
         })) as { packageManager: keyof typeof PACKAGE_MANAGERS }
+
         let writeIndex = true
         if (fs.existsSync(indexTsPath)) {
           const response = (await prompt({
@@ -143,7 +160,7 @@ export async function init(program: Command) {
           writeTsconfig = response.writeTsconfig
         }
         if (writeIndex) {
-          writeIndexTSFile(indexTsPath, responseName.value, responseType.value)
+          writeIndexTSFile(indexTsPath, responseName.value, responseType.value, TypeMap[responseType.value].imports)
           console.log(colors.green(`index.ts is created`))
         }
         if (writeTsconfig) {
@@ -153,7 +170,7 @@ export async function init(program: Command) {
         console.log(colors.cyan('Installing the necessary packages...'))
         execSync(PACKAGE_MANAGERS[responsePackage.packageManager]('.'))
         console.log(
-          colors.green(`Done! Open ${colors.underline('column.ts')} to start building your column, happy coding :)`),
+          colors.green(`Done! Open ${colors.underline('index.ts')} to start building your column, happy coding :)`),
         )
       } catch (e) {
         console.log(colors.green('Cancelled'))

@@ -13,6 +13,7 @@ type Options = {
   path?: string
   file: string
   show?: boolean
+  dryrun?: boolean
 }
 const domain = process.env.DOMAIN ?? 'https://column.app/'
 export function publish(program: Command) {
@@ -21,12 +22,14 @@ export function publish(program: Command) {
     .argument('[key]', `publish key, generate one at ${domain}publish`)
     .option('-p, --path <path>', 'path to the column directory, where package.json is at the root')
     .option('-s, --show', 'show the code')
+    .option('-d, --dryrun', 'do not publish')
     .option(
       'f, --file <filename>',
-      'file name without extension that exports the column schema, defaults to "column"',
-      'column',
+      'file name without extension that exports the column schema, defaults to "index"',
+      'index',
     )
     .action(async (key: string | null, options: Options) => {
+      // console.log('OPTOONS: ', options)
       if (key == null) {
         console.error(`Please provide a publish key, you can generate one at ${domain}settings/columns`)
         exit(1)
@@ -44,6 +47,7 @@ export function publish(program: Command) {
         bundle: true,
         minify: true,
         platform: 'browser',
+        format: 'esm',
         absWorkingDir: cwd(),
         outfile: bundledCodePath,
       } as BuildOptions
@@ -54,7 +58,7 @@ export function publish(program: Command) {
       let name: string | null = null
       let info: string | null = null
 
-      const [bundledCode, sourceCode] = await Promise.all([
+      let [bundledCode, sourceCode] = await Promise.all([
         readFile(bundledCodePath, 'utf8'),
         readFile(sourceCodePath, 'utf8'),
       ])
@@ -63,10 +67,16 @@ export function publish(program: Command) {
         console.log(colors.red('Error: unable to find the column schema'))
         exit(0)
       }
+
       const column: ColumnSchema = rawColumnExported.default
       console.log(colors.cyan('Verifying...'))
       try {
         const validSchema = ColumnSchemaCheck(column)
+        // by now it's validated, so now we rebuild to be published using esm
+        // overwriting bundledCodePath
+        await esbuild.build({ ...buildOptions })
+        bundledCode = await readFile(bundledCodePath, 'utf8')
+
         type = validSchema!.type
         name = validSchema!.name
         info = validSchema!.info
@@ -86,8 +96,12 @@ export function publish(program: Command) {
         }
         exit(0)
       }
-      console.log(colors.cyan('Publishing...'))
 
+      if (options.dryrun) {
+        console.log('Skipping publish...')
+        exit(0)
+      }
+      console.log(colors.cyan('Publishing...'))
       try {
         const result = await axios.post(domain + 'api/column/publish', {
           type,
@@ -99,10 +113,11 @@ export function publish(program: Command) {
         })
         if (result.data.error != null) {
           console.error(colors.red('Error: ' + result.data.error))
+          exit(1)
         } else {
           console.log(colors.green('Success'))
+          exit(0)
         }
-        exit(0)
       } catch (e) {
         console.error(colors.red('Unknown error, please reach out to us if this problem persists @ hello@column.app'))
       }
