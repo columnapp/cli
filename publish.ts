@@ -20,6 +20,7 @@ export function publish(program: Command) {
   program
     .command('publish')
     .argument('[key]', `publish key, generate one at ${domain}publish`)
+    // TODO: unable to publish in the same directory, always needs to have -p for some reason
     .option('-p, --path <path>', 'path to the column directory, where package.json is at the root')
     .option('-s, --show', 'show the code')
     .option('-d, --dryrun', 'do not publish')
@@ -29,7 +30,6 @@ export function publish(program: Command) {
       'index',
     )
     .action(async (key: string | null, options: Options) => {
-      // console.log('OPTOONS: ', options)
       if (key == null) {
         console.error(`Please provide a publish key, you can generate one at ${domain}settings/columns`)
         exit(1)
@@ -40,7 +40,10 @@ export function publish(program: Command) {
       }
       const cwd = (file?: string) =>
         path.resolve(path.join(...([options.path == null ? '.' : options.path, file].filter(Boolean) as Array<string>)))
+      // console.log(cwd('test'))
+      // exit(1)
       const sourceCodePath = cwd(options.file + '.ts')
+      console.log('SOURCE CODE PATH: ', sourceCodePath)
       const buildOptions = {
         entryPoints: [sourceCodePath],
         allowOverwrite: true,
