@@ -1,6 +1,6 @@
 {
   "name": "@columnapp/cli",
-  "version": "1.0.0-alpha7",
+  "version": "1.0.0-alpha8",
   "repository": "https://github.com/columnapp/cli",
   "scripts": {
     "test-init": "ts-node init.ts",
@@ -33,8 +33,8 @@
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.15.18",
-    "@columnapp/schema": "0.0.1-alpha22"
+    "esbuild": "^0.16.1",
+    "@columnapp/schema": "0.0.1-alpha26"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",
