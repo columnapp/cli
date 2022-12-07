@@ -43,7 +43,6 @@ export function publish(program: Command) {
       // console.log(cwd('test'))
       // exit(1)
       const sourceCodePath = cwd(options.file + '.ts')
-      console.log('SOURCE CODE PATH: ', sourceCodePath)
       const buildOptions = {
         entryPoints: [sourceCodePath],
         allowOverwrite: true,
@@ -57,7 +56,6 @@ export function publish(program: Command) {
       // we need to build twice, once with cjs as platform so we can require and validate, second time using esm to publish
       // now we build to verify
       await esbuild.build({ ...buildOptions, format: 'cjs' })
-      let type: string | null = null
       let name: string | null = null
       let info: string | null = null
 
@@ -80,7 +78,6 @@ export function publish(program: Command) {
         await esbuild.build({ ...buildOptions })
         bundledCode = await readFile(bundledCodePath, 'utf8')
 
-        type = validSchema!.type
         name = validSchema!.name
         info = validSchema!.info
 
@@ -107,7 +104,6 @@ export function publish(program: Command) {
       console.log(colors.cyan('Publishing...'))
       try {
         const result = await axios.post(domain + 'api/column/publish', {
-          type,
           name,
           info,
           key,

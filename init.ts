@@ -15,17 +15,16 @@ const PACKAGE_MANAGERS = {
 /**
  * generated the index.ts file
  */
-function writeIndexTSFile(filePath: string, name: string, type: string, imports: string) {
+function writeIndexTSFile(filePath: string, name: string) {
   if (fs.existsSync(filePath)) {
     fs.rmSync(filePath)
   }
   fs.writeFileSync(
     filePath,
-    `import { ${imports} } from '@columnapp/schema'
+    `import { ColumnSchema } from '@columnapp/schema'
 
-const column: ${imports} = {
+const column:ColumnSchema = {
   name: '${name}',
-  type: '${type}',
   info: 'example string column',
 }
 
@@ -68,33 +67,6 @@ type Options = {
   path?: string
 }
 
-const TypeMap: {
-  [type in typeof ColumnSchema._input.type]: {
-    imports: string
-  }
-} = {
-  boolean: {
-    imports: 'ColumnSchemaBoolean',
-  },
-  'boolean[]': {
-    imports: 'ColumnSchemaBooleans',
-  },
-  date: {
-    imports: 'ColumnSchemaDate',
-  },
-  'date[]': {
-    imports: 'ColumnSchemaDates',
-  },
-  number: {
-    imports: 'ColumnSchemaNumber',
-  },
-  'number[]': {
-    imports: 'ColumnSchemaNumbers',
-  },
-  string: { imports: 'ColumnSchemaString' },
-  'string[]': { imports: 'ColumnSchemaStrings' },
-}
-
 export async function init(program: Command) {
   program
     .command('init')
@@ -124,14 +96,6 @@ export async function init(program: Command) {
           required: true,
         })) as { value: string }
 
-        const responseType = (await prompt({
-          type: 'select',
-          name: 'value',
-          choices: Object.keys(TypeMap).map((type) => ({ name: type, value: type })),
-          message: 'column type:',
-          required: true,
-        })) as { value: keyof typeof TypeMap }
-
         const responsePackage = (await prompt({
           type: 'select',
           name: 'packageManager',
@@ -160,7 +124,7 @@ export async function init(program: Command) {
           writeTsconfig = response.writeTsconfig
         }
         if (writeIndex) {
-          writeIndexTSFile(indexTsPath, responseName.value, responseType.value, TypeMap[responseType.value].imports)
+          writeIndexTSFile(indexTsPath, responseName.value)
           console.log(colors.green(`index.ts is created`))
         }
         if (writeTsconfig) {
