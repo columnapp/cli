@@ -1,6 +1,6 @@
 {
   "name": "@columnapp/cli",
-  "version": "1.0.0-alpha8",
+  "version": "1.0.0-alpha9",
   "repository": "https://github.com/columnapp/cli",
   "scripts": {
     "test-init": "ts-node init.ts",
