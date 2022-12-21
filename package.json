@@ -33,16 +33,16 @@
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.16.1",
-    "@columnapp/schema": "0.0.1-alpha26"
+    "esbuild": "^0.16.10",
+    "@columnapp/schema": "0.0.1-alpha35"
   },
   "devDependencies": {
-    "@types/node": "^18.11.11",
-    "prettier": "^2.8.0",
+    "@types/node": "^18.11.17",
+    "prettier": "^2.8.1",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.1",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "publishConfig": {
     "access": "public",
