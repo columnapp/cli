@@ -9,6 +9,7 @@ import { readFile } from 'fs/promises'
 import os from 'os'
 import path from 'path'
 import { exit } from 'process'
+import { fromZodError } from 'zod-validation-error'
 type Options = {
   path?: string
   file: string
@@ -71,8 +72,16 @@ export function publish(program: Command) {
 
       const column: ColumnSchema = rawColumnExported.default
       console.log(colors.cyan('Verifying...'))
+      let validSchema = null
       try {
-        const validSchema = ColumnSchemaCheck(column)
+        validSchema = ColumnSchemaCheck(column)
+      } catch (e: any) {
+        const errors = fromZodError(e)
+        console.error('Error: invalid schema')
+        console.log(errors)
+        exit(1)
+      }
+      try {
         // by now it's validated, so now we rebuild to be published using esm
         // overwriting bundledCodePath
         await esbuild.build({ ...buildOptions })

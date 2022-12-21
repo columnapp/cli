@@ -26,6 +26,7 @@ function writeIndexTSFile(filePath: string, name: string) {
 const column:ColumnSchema = {
   name: '${name}',
   info: 'example string column',
+  primitive: (api) => api.cell.value?.toString() ?? '',
 }
 
 export default column`,

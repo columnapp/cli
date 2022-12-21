@@ -14,6 +14,7 @@ specifiers:
   ts-node: ^10.9.1
   tsconfig-paths: ^4.1.1
   typescript: ^4.9.4
+  zod-validation-error: ^0.2.2
 
 dependencies:
   '@columnapp/schema': 0.0.1-alpha35_moeqx3xmzxqxagf2sz6mqkbb7m
@@ -23,6 +24,7 @@ dependencies:
   dotenv: 16.0.3
   enquirer: 2.3.6
   esbuild: 0.16.10
+  zod-validation-error: 0.2.2
 
 devDependencies:
   '@types/node': 18.11.17
@@ -39,7 +41,7 @@ packages:
     dependencies:
       ts-node: 10.9.1_moeqx3xmzxqxagf2sz6mqkbb7m
       zod: 3.19.1
-      zod-validation-error: 0.2.1_zod@3.19.1
+      zod-validation-error: 0.2.2_zod@3.19.1
     transitivePeerDependencies:
       - '@swc/core'
       - '@swc/wasm'
@@ -263,12 +265,6 @@ packages:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.14
-
-  /@swc/helpers/0.4.14:
-    resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
-    dependencies:
-      tslib: 2.4.1
-    dev: false
 
   /@tsconfig/node10/1.0.9:
     resolution: {integrity: sha512-jNsYVVxU8v5g43Erja32laIDHXeoNvFEpX33OK4d6hljo3jDhCBDhx5dhCCTMWUojscpAagGiRkBKxpdl9fxqA==}
@@ -550,10 +546,6 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tslib/2.4.1:
-    resolution: {integrity: sha512-tGyy4dAjRIEwI7BzsB0lynWgOpfqjUdq91XXAlIWD2OwKBH7oCl/GZG/HT4BOHrTlPMOASlMQ7veyTqpmRcrNA==}
-    dev: false
-
   /typescript/4.9.4:
     resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
     engines: {node: '>=4.2.0'}
@@ -570,13 +562,19 @@ packages:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
 
-  /zod-validation-error/0.2.1_zod@3.19.1:
-    resolution: {integrity: sha512-zGg6P5EHi5V0dvyEeC8HBZd2pzp7QDKTngkSWgWunljrY+0SHkHyjI519D+u8/37BHkGHAFseWgnZ2Uq8LNFKg==}
+  /zod-validation-error/0.2.2:
+    resolution: {integrity: sha512-CD7i+LIxdskkgxhVOsCr5F1Q4kbnbpgQGBQXdNdFxKCecS4OFseekJ5gOkNu/Y6rapQ4Rj7XBYMckBhyOZm+lQ==}
+    engines: {node: ^14.17 || >=16.0.0}
+    peerDependencies:
+      zod: ^3.18.0
+    dev: false
+
+  /zod-validation-error/0.2.2_zod@3.19.1:
+    resolution: {integrity: sha512-CD7i+LIxdskkgxhVOsCr5F1Q4kbnbpgQGBQXdNdFxKCecS4OFseekJ5gOkNu/Y6rapQ4Rj7XBYMckBhyOZm+lQ==}
     engines: {node: ^14.17 || >=16.0.0}
     peerDependencies:
       zod: ^3.18.0
     dependencies:
-      '@swc/helpers': 0.4.14
       zod: 3.19.1
     dev: false
 

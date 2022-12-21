@@ -1,6 +1,6 @@
 {
   "name": "@columnapp/cli",
-  "version": "1.0.0-alpha9",
+  "version": "1.0.0-alpha11",
   "repository": "https://github.com/columnapp/cli",
   "scripts": {
     "test-init": "ts-node init.ts",
@@ -28,13 +28,14 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
+    "@columnapp/schema": "0.0.1-alpha35",
     "axios": "^1.2.1",
     "colors": "^1.4.0",
     "commander": "^9.4.1",
     "dotenv": "^16.0.3",
     "enquirer": "^2.3.6",
     "esbuild": "^0.16.10",
-    "@columnapp/schema": "0.0.1-alpha35"
+    "zod-validation-error": "^0.2.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.17",
