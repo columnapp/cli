@@ -1,6 +1,6 @@
 {
   "name": "@columnapp/cli",
-  "version": "1.0.0-alpha11",
+  "version": "1.0.0-alpha12",
   "repository": "https://github.com/columnapp/cli",
   "scripts": {
     "test-init": "ts-node init.ts",
@@ -28,21 +28,22 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "@columnapp/schema": "0.0.1-alpha35",
-    "axios": "^1.2.1",
+    "@columnapp/schema": "0.0.1-alpha52",
+    "axios": "^1.2.3",
     "colors": "^1.4.0",
-    "commander": "^9.4.1",
+    "commander": "^10.0.0",
     "dotenv": "^16.0.3",
     "enquirer": "^2.3.6",
-    "esbuild": "^0.16.10",
-    "zod-validation-error": "^0.2.2"
+    "esbuild": "^0.17.4",
+    "zod": "^3.20.2",
+    "zod-validation-error": "^0.3.0"
   },
   "devDependencies": {
-    "@types/node": "^18.11.17",
-    "prettier": "^2.8.1",
-    "rimraf": "^3.0.2",
+    "@types/node": "^18.11.18",
+    "prettier": "^2.8.3",
+    "rimraf": "^4.1.1",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.1",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "^4.9.4"
   },
   "publishConfig": {
